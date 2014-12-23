@@ -10,7 +10,7 @@ BuildArch: armv7hl
 # << macros
 
 Summary:    Eventsview controls patch 1row + Volume
-Version:    0.0.1
+Version:    0.0.2
 Release:    1
 Group:      Qt/Qt
 License:    TODO
@@ -19,7 +19,7 @@ Requires:   patchmanager
 Requires:   lipstick-jolla-home-qt5 >= 0.23.20.11
 
 %description
-Remastered "Eventsview controls patch" showing only one row of switches and row
+Remastered "Eventsview controls patch" showing only rows of switches and row
  with Volume slider in events page.
 
 

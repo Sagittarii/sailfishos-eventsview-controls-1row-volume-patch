@@ -1,6 +1,6 @@
-commit 1fa84e0fe6bc81967d2dc97ccd9cf4895f901917
+commit f720d429adafb517d45cce05e2b9602f018e40c0
 Author: CODeRUS <coderusinbox@gmail.com>
-Date:   Tue Dec 23 14:47:40 2014 +0500
+Date:   Tue Dec 23 16:00:24 2014 +0500
 
     Events view controls remastered for u10
 
@@ -29,10 +29,10 @@ index 75d06b5..6847f32 100644
          }
 diff --git a/usr/share/lipstick-jolla-home-qt5/eventsview/FavoritesZoneControls.qml b/usr/share/lipstick-jolla-home-qt5/eventsview/FavoritesZoneControls.qml
 new file mode 100644
-index 0000000..0c0f4f8
+index 0000000..a769bdf
 --- /dev/null
 +++ b/usr/share/lipstick-jolla-home-qt5/eventsview/FavoritesZoneControls.qml
-@@ -0,0 +1,81 @@
+@@ -0,0 +1,93 @@
 +import QtQuick 2.0
 +import Sailfish.Silica 1.0
 +import com.jolla.settings 1.0
@@ -45,8 +45,10 @@ index 0000000..0c0f4f8
 +    Grid {
 +        id: gridFavorites
 +        columns: 4
-+        rows: 1
++        rows: Math.ceil(objectsCount / 4)
 +        width: root.width
++        clip: true
++        property int objectsCount: 0
 +
 +        Repeater {
 +            model: FavoritesModel { filter: "grid_favorites" }
@@ -55,6 +57,16 @@ index 0000000..0c0f4f8
 +                id: gridWrapper
 +                height: gridLoader.height
 +                width: gridLoader.width
++                Component.onCompleted: {
++                    if (model.object.type === "custom" && model.object.data()["params"]) {
++                        gridFavorites.objectsCount += 1
++                    }
++                }
++                Component.onDestruction: {
++                    if (model.object.type === "custom" && model.object.data()["params"]) {
++                        gridFavorites.objectsCount -= 1
++                    }
++                }
 +                SettingComponentLoader {
 +                    id: gridLoader
 +                    width: root.width / 4
@@ -74,12 +86,12 @@ index 0000000..0c0f4f8
 +                Binding {
 +                    target: gridLoader.item
 +                    property: "highlighted"
-+                    value: gridLoader.item.down
++                    value: gridLoader.item && gridLoader.item.down
 +                }
 +                Binding {
 +                    target: gridLoader.item
 +                    property: "_backgroundColor"
-+                    value: Theme.rgba(Theme.highlightBackgroundColor, gridLoader.item.down ?
++                    value: Theme.rgba(Theme.highlightBackgroundColor, gridLoader.item && gridLoader.item.down ?
 +                                          Theme.highlightBackgroundOpacity : 0)
 +                }
 +            }
@@ -102,12 +114,12 @@ index 0000000..0c0f4f8
 +                Binding {
 +                    target: listLoader.item
 +                    property: "highlighted"
-+                    value: listLoader.item.down
++                    value: listLoader.item && listLoader.item.down
 +                }
 +                Binding {
 +                    target: listLoader.item
 +                    property: "_backgroundColor"
-+                    value: Theme.rgba(Theme.highlightBackgroundColor, listLoader.item.down ?
++                    value: Theme.rgba(Theme.highlightBackgroundColor, listLoader.item && listLoader.item.down ?
 +                                          Theme.highlightBackgroundOpacity : 0)
 +                }
 +            }
