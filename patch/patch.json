@@ -1,0 +1,8 @@
+{
+    "name": "Eventsview controls patch 1row + Volume",
+    "description": "Remastered \"Eventsview controls patch\" showing only one row of switches and row with Volume slider in events page.",
+    "category": "homescreen",
+    "infos": {
+        "maintainer": "coderus"
+    }
+}

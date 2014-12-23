@@ -1,0 +1,116 @@
+commit 1fa84e0fe6bc81967d2dc97ccd9cf4895f901917
+Author: CODeRUS <coderusinbox@gmail.com>
+Date:   Tue Dec 23 14:47:40 2014 +0500
+
+    Events view controls remastered for u10
+
+diff --git a/usr/share/lipstick-jolla-home-qt5/eventsview/EventsViewList.qml b/usr/share/lipstick-jolla-home-qt5/eventsview/EventsViewList.qml
+index 75d06b5..6847f32 100644
+--- a/usr/share/lipstick-jolla-home-qt5/eventsview/EventsViewList.qml
++++ b/usr/share/lipstick-jolla-home-qt5/eventsview/EventsViewList.qml
+@@ -67,6 +67,18 @@ NotificationListView {
+             }
+         }
+         Item {
++            id: controlsParent
++            width: parent.width
++            height: 0
++            Component.onCompleted: {
++                var controlsComponent = Qt.createComponent(Qt.resolvedUrl("FavoritesZoneControls.qml"))
++                if (controlsComponent.status == Component.Ready) {
++                    var controlsObject = controlsComponent.createObject(controlsParent)
++                    controlsParent.height = controlsObject.height
++                }
++            }
++        }
++        Item {
+             width: 1
+             height: Theme.paddingLarge
+         }
+diff --git a/usr/share/lipstick-jolla-home-qt5/eventsview/FavoritesZoneControls.qml b/usr/share/lipstick-jolla-home-qt5/eventsview/FavoritesZoneControls.qml
+new file mode 100644
+index 0000000..0c0f4f8
+--- /dev/null
++++ b/usr/share/lipstick-jolla-home-qt5/eventsview/FavoritesZoneControls.qml
+@@ -0,0 +1,81 @@
++import QtQuick 2.0
++import Sailfish.Silica 1.0
++import com.jolla.settings 1.0
++
++Column {
++    id: root
++    width: screen.width
++    spacing: Theme.paddingLarge
++
++    Grid {
++        id: gridFavorites
++        columns: 4
++        rows: 1
++        width: root.width
++
++        Repeater {
++            model: FavoritesModel { filter: "grid_favorites" }
++
++            delegate: Item {
++                id: gridWrapper
++                height: gridLoader.height
++                width: gridLoader.width
++                SettingComponentLoader {
++                    id: gridLoader
++                    width: root.width / 4
++                    height: width
++                    settingsObject: model.object
++                    gridMode: true
++                    source: {
++                        if (settingsObject.type === "custom") {
++                            var params = settingsObject.data()["params"]
++                            if (params) {
++                                return params.source
++                            }
++                        }
++                        return ""
++                    }
++                }
++                Binding {
++                    target: gridLoader.item
++                    property: "highlighted"
++                    value: gridLoader.item.down
++                }
++                Binding {
++                    target: gridLoader.item
++                    property: "_backgroundColor"
++                    value: Theme.rgba(Theme.highlightBackgroundColor, gridLoader.item.down ?
++                                          Theme.highlightBackgroundOpacity : 0)
++                }
++            }
++        }
++    }
++
++    Column {
++        width: root.width
++        Repeater {
++            model: FavoritesModel { filter: "list_favorites" }
++            delegate: Item {
++                id: listWrapper
++                height: listLoader.height
++                width: root.width
++                SettingComponentLoader {
++                    id: listLoader
++                    width: root.width
++                    settingsObject: model.object
++                }
++                Binding {
++                    target: listLoader.item
++                    property: "highlighted"
++                    value: listLoader.item.down
++                }
++                Binding {
++                    target: listLoader.item
++                    property: "_backgroundColor"
++                    value: Theme.rgba(Theme.highlightBackgroundColor, listLoader.item.down ?
++                                          Theme.highlightBackgroundOpacity : 0)
++                }
++            }
++        }
++    }
++}
