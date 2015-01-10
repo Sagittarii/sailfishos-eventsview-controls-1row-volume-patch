@@ -44,8 +44,8 @@ index 0000000..a769bdf
 +
 +    Grid {
 +        id: gridFavorites
-+        columns: 4
-+        rows: Math.ceil(objectsCount / 4)
++        columns: 6
++        rows: Math.ceil(objectsCount / 6)
 +        width: root.width
 +        clip: true
 +        property int objectsCount: 0
@@ -69,8 +69,8 @@ index 0000000..a769bdf
 +                }
 +                SettingComponentLoader {
 +                    id: gridLoader
-+                    width: root.width / 4
-+                    height: width
++                    width: root.width / 6
++                    height: root.width / 4
 +                    settingsObject: model.object
 +                    gridMode: true
 +                    source: {
